@@ -1,0 +1,100 @@
+[package]
+name = "wallet-engine"
+version = "0.1.0"
+edition = "2024"
+authors = ["Fintech Engine Team"]
+description = "High-performance financial transaction engine"
+
+
+[[bin]]
+name = "wallet-engine"
+path = "src/main.rs"
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+tokio-stream = "0.1"
+
+# gRPC + Protobuf
+tonic = { version = "0.14.4", features = ["tls"] }
+tonic-reflection = "0.14.4"
+prost = "0.14.1"
+prost-types = "0.14.1"
+
+# Database
+sqlx = { version = "0.8", features = [
+    "runtime-tokio-rustls",
+    "postgres",
+    "uuid",
+    "rust_decimal",
+    "chrono",
+    "migrate",
+] }
+
+# Decimal arithmetic (no floating point)
+rust_decimal = { version = "1.36", features = ["serde-with-str"] }
+rust_decimal_macros = "1.36"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# UUID
+uuid = { version = "1.11", features = ["v4", "serde"] }
+
+# Error handling
+thiserror = "2.0.17"
+anyhow = "1.0"
+
+# Messaging - RabbitMQ
+lapin = "4.4.0"
+deadpool-lapin = "0.13.0"
+
+# Observability
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+tracing-opentelemetry = "0.32.0"
+metrics = "0.24.2"
+metrics-exporter-prometheus = "0.18.0"
+
+# Configuration
+config = "0.15.21"
+dotenvy = "0.15"
+
+# Rate limiting
+governor = "0.10.3"
+
+# Retry logic
+backoff = { version = "0.4", features = ["tokio"] }
+
+# Date/time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Tower middleware
+tower = { version = "0.5", features = ["timeout", "limit"] }
+tower-http = { version = "0.6", features = ["trace", "cors"] }
+
+# Axum (REST fallback)
+axum = { version = "0.8.8", features = ["macros"] }
+
+# Async traits
+async-trait = "0.1"
+
+# Concurrency
+dashmap = "6.1"
+parking_lot = "0.12"
+
+[build-dependencies]
+tonic-build = "0.14.4"
+
+[dev-dependencies]
+tokio-test = "0.4"
+mockall = "0.13.0"
+testcontainers = "0.27.2"
+testcontainers-modules = { version = "0.13.0", features = ["postgres", "rabbitmq"] }
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
