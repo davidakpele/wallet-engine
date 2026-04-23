@@ -3,7 +3,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::domain::entities::{TransactionStatus, TransactionType};
+use crate::domain::entities::{TransactionType};
 use crate::domain::value_objects::{TransactionId, WalletId};
 
 /// All domain events emitted after state changes.

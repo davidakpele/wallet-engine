@@ -1,10 +1,6 @@
 // src/main.rs
-//
-// Composition root: build the dependency graph and start the gRPC server.
-// This is the only place that knows about every concrete type.
 
 use std::sync::Arc;
-
 use sqlx::postgres::PgPoolOptions;
 use tonic::transport::Server;
 use tracing::info;

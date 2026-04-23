@@ -1,7 +1,4 @@
 // src/application/ports.rs
-//
-// Secondary ports: interfaces the application layer drives.
-
 use async_trait::async_trait;
 
 use crate::domain::events::DomainEvent;
