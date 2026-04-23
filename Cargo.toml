@@ -16,7 +16,7 @@ tokio = { version = "1.40", features = ["full"] }
 tokio-stream = "0.1"
 
 # gRPC + Protobuf
-tonic = { version = "0.14.4", features = ["tls"] }
+tonic = { version = "0.14.4", features = ["transport", "tls-native-roots"] }
 tonic-reflection = "0.14.4"
 prost = "0.14.1"
 prost-types = "0.14.1"
@@ -90,8 +90,8 @@ tonic-build = "0.14.4"
 [dev-dependencies]
 tokio-test = "0.4"
 mockall = "0.13.0"
-testcontainers = "0.27.2"
-testcontainers-modules = { version = "0.13.0", features = ["postgres", "rabbitmq"] }
+# testcontainers = "0.27.2"
+# testcontainers-modules = { version = "0.14.0", features = ["postgres", "rabbitmq"] }
 
 [profile.release]
 opt-level = 3
