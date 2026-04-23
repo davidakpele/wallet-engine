@@ -4620,6 +4620,7 @@ dependencies = [
  "tokio-stream",
  "tokio-test",
  "tonic",
+ "tonic-prost",
  "tonic-prost-build",
  "tonic-reflection",
  "tower",

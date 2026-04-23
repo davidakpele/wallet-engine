@@ -1,11 +1,7 @@
 // src/interfaces/grpc/middleware.rs
-//
-// Tower middleware layers: rate limiting, tracing, metrics.
-
 use std::{
     num::NonZeroU32,
     sync::Arc,
-    time::Instant,
 };
 
 use governor::{
@@ -16,7 +12,6 @@ use governor::{
 };
 use metrics::{counter, histogram};
 use tonic::{Request, Status};
-use tracing::info;
 
 pub type SharedRateLimiter =
     Arc<RateLimiter<NotKeyed, InMemoryState, DefaultClock, NoOpMiddleware>>;

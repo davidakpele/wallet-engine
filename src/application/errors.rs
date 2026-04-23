@@ -3,6 +3,7 @@ use thiserror::Error;
 
 use crate::domain::errors::DomainError;
 
+#[allow(dead_code)]
 #[derive(Debug, Error)]
 pub enum ApplicationError {
     #[error("Domain error: {0}")]

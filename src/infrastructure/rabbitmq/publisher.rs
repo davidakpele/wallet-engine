@@ -48,7 +48,7 @@ impl RabbitMQPublisher {
         // Declare Dead-Letter Exchange
         channel
             .exchange_declare(
-                DLX_NAME,
+                DLX_NAME.into(),
                 ExchangeKind::Fanout,
                 ExchangeDeclareOptions { durable: true, ..Default::default() },
                 FieldTable::default(),
@@ -59,7 +59,7 @@ impl RabbitMQPublisher {
         // Declare Dead-Letter Queue
         channel
             .queue_declare(
-                DLQ_NAME,
+                DLQ_NAME.into(),
                 QueueDeclareOptions { durable: true, ..Default::default() },
                 FieldTable::default(),
             )
@@ -67,7 +67,7 @@ impl RabbitMQPublisher {
             .map_err(|e| ApplicationError::infrastructure(format!("DLQ declare: {e}")))?;
 
         channel
-            .queue_bind(DLQ_NAME, DLX_NAME, "", QueueBindOptions::default(), FieldTable::default())
+            .queue_bind(DLQ_NAME.into(), DLX_NAME.into(), "".into(), QueueBindOptions::default(), FieldTable::default())
             .await
             .map_err(|e| ApplicationError::infrastructure(format!("DLQ bind: {e}")))?;
 
@@ -80,7 +80,7 @@ impl RabbitMQPublisher {
 
         channel
             .exchange_declare(
-                EXCHANGE_NAME,
+                EXCHANGE_NAME.into(),
                 ExchangeKind::Topic,
                 ExchangeDeclareOptions { durable: true, ..Default::default() },
                 args,
@@ -109,6 +109,8 @@ impl RabbitMQPublisher {
 impl EventPublisher for RabbitMQPublisher {
     async fn publish(&self, event: DomainEvent) -> Result<(), ApplicationError> {
         let routing_key = event.routing_key();
+        let rk = routing_key.to_string();
+
         let payload = serde_json::to_vec(&event)
             .map_err(|e| ApplicationError::infrastructure(format!("Serialize event: {e}")))?;
 
@@ -128,14 +130,14 @@ impl EventPublisher for RabbitMQPublisher {
 
             let props = BasicProperties::default()
                 .with_content_type("application/json".into())
-                .with_delivery_mode(2) // Persistent
+                .with_delivery_mode(2)
                 .with_message_id(event.event_id().to_string().into())
                 .with_timestamp(event.occurred_at().timestamp() as u64);
 
             channel
                 .basic_publish(
-                    EXCHANGE_NAME,
-                    routing_key,
+                    EXCHANGE_NAME.into(),
+                    rk.clone().into(),
                     BasicPublishOptions::default(),
                     &payload,
                     props,
@@ -152,11 +154,10 @@ impl EventPublisher for RabbitMQPublisher {
             Ok(())
         })
         .await
-        .map_err(|e| {
-            error!(error = %e, routing_key, "Failed to publish event after retries");
+        .map_err(|e: backoff::Error<ApplicationError>| {
+            error!(error = %e, routing_key = %rk, "Failed to publish event after retries");
             ApplicationError::EventPublish(e.to_string())
         })?;
-
         Ok(())
     }
 }

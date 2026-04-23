@@ -94,8 +94,8 @@ impl fmt::Display for Money {
 
 // ─── Currency ─────────────────────────────────────────────────────────────────
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct Currency(String);
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+pub struct Currency(pub String);
 
 impl Currency {
     pub fn new(code: &str) -> Result<Self, DomainError> {
