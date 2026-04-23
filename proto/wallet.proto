@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package wallet.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum TransactionType {
+  TRANSACTION_TYPE_UNSPECIFIED = 0;
+  TRANSACTION_TYPE_DEPOSIT     = 1;
+  TRANSACTION_TYPE_WITHDRAWAL  = 2;
+  TRANSACTION_TYPE_TRANSFER    = 3;
+}
+
+enum TransactionStatus {
+  TRANSACTION_STATUS_UNSPECIFIED = 0;
+  TRANSACTION_STATUS_PENDING     = 1;
+  TRANSACTION_STATUS_COMPLETED   = 2;
+  TRANSACTION_STATUS_FAILED      = 3;
+  TRANSACTION_STATUS_ROLLED_BACK = 4;
+}
+
+// ─── Messages ─────────────────────────────────────────────────────────────────
+
+message Money {
+  string amount   = 1; // Decimal string e.g. "100.50"
+  string currency = 2; // ISO 4217 e.g. "USD"
+}
+
+message Wallet {
+  string  id      = 1;
+  string  user_id = 2;
+  Money   balance = 3;
+  int64   version = 4; // Optimistic locking version
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message Transaction {
+  string            id               = 1;
+  string            wallet_id        = 2;
+  optional string   to_wallet_id     = 3;  // For transfers
+  Money             amount           = 4;
+  TransactionType   type             = 5;
+  TransactionStatus status           = 6;
+  string            idempotency_key  = 7;
+  optional string   failure_reason   = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// ─── Requests & Responses ─────────────────────────────────────────────────────
+
+message DepositRequest {
+  string idempotency_key = 1;
+  string wallet_id       = 2;
+  Money  amount          = 3;
+}
+
+message DepositResponse {
+  Transaction transaction = 1;
+  Wallet      wallet      = 2;
+}
+
+message WithdrawalRequest {
+  string idempotency_key = 1;
+  string wallet_id       = 2;
+  Money  amount          = 3;
+}
+
+message WithdrawalResponse {
+  Transaction transaction = 1;
+  Wallet      wallet      = 2;
+}
+
+message TransferRequest {
+  string idempotency_key  = 1;
+  string from_wallet_id   = 2;
+  string to_wallet_id     = 3;
+  Money  amount           = 4;
+}
+
+message TransferResponse {
+  Transaction transaction    = 1;
+  Wallet      from_wallet    = 2;
+  Wallet      to_wallet      = 3;
+}
+
+message GetWalletRequest {
+  string wallet_id = 1;
+}
+
+message GetWalletResponse {
+  Wallet wallet = 1;
+}
+
+message CreateWalletRequest {
+  string user_id  = 1;
+  string currency = 2;
+}
+
+message CreateWalletResponse {
+  Wallet wallet = 1;
+}
+
+message GetTransactionRequest {
+  string transaction_id = 1;
+}
+
+message GetTransactionResponse {
+  Transaction transaction = 1;
+}
+
+// ─── Service ──────────────────────────────────────────────────────────────────
+
+service WalletService {
+  rpc CreateWallet   (CreateWalletRequest)   returns (CreateWalletResponse);
+  rpc GetWallet      (GetWalletRequest)      returns (GetWalletResponse);
+  rpc Deposit        (DepositRequest)        returns (DepositResponse);
+  rpc Withdraw       (WithdrawalRequest)     returns (WithdrawalResponse);
+  rpc Transfer       (TransferRequest)       returns (TransferResponse);
+  rpc GetTransaction (GetTransactionRequest) returns (GetTransactionResponse);
+}
