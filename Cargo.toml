@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Fintech Engine Team"]
 description = "High-performance financial transaction engine"
-
+rust-version = "1.88"
 
 [[bin]]
 name = "wallet-engine"
@@ -16,10 +16,10 @@ tokio = { version = "1.40", features = ["full"] }
 tokio-stream = "0.1"
 
 # gRPC + Protobuf
-tonic = { version = "0.14.4", features = ["transport", "tls-native-roots"] }
-tonic-reflection = "0.14.4"
-prost = "0.14.1"
-prost-types = "0.14.1"
+tonic = { version = "0.12", features = ["transport", "tls-native-roots"] }
+tonic-reflection = "0.12"
+prost = "0.13"
+prost-types = "0.13"
 
 # Database
 sqlx = { version = "0.8", features = [
@@ -43,26 +43,26 @@ serde_json = "1.0"
 uuid = { version = "1.11", features = ["v4", "serde"] }
 
 # Error handling
-thiserror = "2.0.17"
+thiserror = "2.0"
 anyhow = "1.0"
 
 # Messaging - RabbitMQ
-lapin = "2.3.3"
-deadpool-lapin = "0.12.1"
+lapin = "2.3"
+deadpool-lapin = "0.12"
 
 # Observability
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
-tracing-opentelemetry = "0.32.0"
-metrics = "0.24.2"
-metrics-exporter-prometheus = "0.18.0"
+tracing-opentelemetry = "0.27"
+metrics = "0.24"
+metrics-exporter-prometheus = "0.15"
 
 # Configuration
-config = "0.15.21"
+config = "0.14"
 dotenvy = "0.15"
 
 # Rate limiting
-governor = "0.10.3"
+governor = "0.6"
 
 # Retry logic
 backoff = { version = "0.4", features = ["tokio"] }
@@ -71,11 +71,11 @@ backoff = { version = "0.4", features = ["tokio"] }
 chrono = { version = "0.4", features = ["serde"] }
 
 # Tower middleware
-tower = { version = "0.5", features = ["timeout", "limit"] }
-tower-http = { version = "0.6", features = ["trace", "cors"] }
+tower = { version = "0.4", features = ["timeout", "limit"] }
+tower-http = { version = "0.5", features = ["trace", "cors"] }
 
 # Axum (REST fallback)
-axum = { version = "0.8.8", features = ["macros"] }
+axum = { version = "0.7", features = ["macros"] }
 
 # Async traits
 async-trait = "0.1"
@@ -83,16 +83,14 @@ async-trait = "0.1"
 # Concurrency
 dashmap = "6.1"
 parking_lot = "0.12"
-tonic-prost = "0.14.5"
 
 [build-dependencies]
-tonic-prost-build = "0.14.4"
+tonic-build = "0.12"
 protoc-bin-vendored = "3"
 
 [dev-dependencies]
 tokio-test = "0.4"
-mockall = "0.13.0"
-
+mockall = "0.13"
 
 [profile.release]
 opt-level = 3
