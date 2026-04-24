@@ -137,7 +137,7 @@ impl EventPublisher for RabbitMQPublisher {
             channel
                 .basic_publish(
                     EXCHANGE_NAME.into(),
-                    rk.clone().into(),
+                    rk.as_str().into(),
                     BasicPublishOptions::default(),
                     &payload,
                     props,
