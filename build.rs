@@ -5,6 +5,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::env::set_var("PROTOC", protoc);
     }
 
-    tonic_prost_build::compile_protos("proto/wallet.proto")?;
+    tonic_build::compile_protos("proto/wallet.proto")?;
     Ok(())
 }

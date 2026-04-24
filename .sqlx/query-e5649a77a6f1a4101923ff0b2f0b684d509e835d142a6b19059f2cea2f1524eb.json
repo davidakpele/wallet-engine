@@ -1,0 +1,47 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO transactions\n                (id, wallet_id, to_wallet_id, amount, currency, transaction_type,\n                 status, idempotency_key, failure_reason, created_at, updated_at)\n            VALUES ($1, $2, $3, $4, $5, $6::transaction_type, $7::transaction_status,\n                    $8, $9, $10, $11)\n            ON CONFLICT (idempotency_key) DO NOTHING\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Uuid",
+        "Numeric",
+        "Bpchar",
+        {
+          "Custom": {
+            "name": "transaction_type",
+            "kind": {
+              "Enum": [
+                "DEPOSIT",
+                "WITHDRAWAL",
+                "TRANSFER"
+              ]
+            }
+          }
+        },
+        {
+          "Custom": {
+            "name": "transaction_status",
+            "kind": {
+              "Enum": [
+                "PENDING",
+                "COMPLETED",
+                "FAILED",
+                "ROLLED_BACK"
+              ]
+            }
+          }
+        },
+        "Varchar",
+        "Text",
+        "Timestamptz",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "e5649a77a6f1a4101923ff0b2f0b684d509e835d142a6b19059f2cea2f1524eb"
+}

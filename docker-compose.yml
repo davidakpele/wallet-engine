@@ -4,8 +4,8 @@ services:
   wallet-engine:
     build: .
     ports:
-      - "50051:50051"   # gRPC
-      - "9090:9090"     # Prometheus metrics
+      - "50051:50051"
+      - "9090:9090"
     environment:
       WALLET__SERVER__HOST: "0.0.0.0"
       WALLET__SERVER__PORT: "50051"
@@ -38,12 +38,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
 
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     ports:
-      - "5672:5672"     # AMQP
-      - "15672:15672"   # Management UI (guest/guest)
+      - "5672:5672"
+      - "15672:15672"
     volumes:
       - rmq_data:/var/lib/rabbitmq
     healthcheck:
@@ -51,6 +52,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus:v2.53.0
@@ -61,7 +63,9 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     depends_on:
-      - wallet-engine
+      wallet-engine:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   pg_data:
