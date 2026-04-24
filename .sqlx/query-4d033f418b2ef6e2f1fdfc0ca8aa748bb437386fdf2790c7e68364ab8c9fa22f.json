@@ -1,0 +1,17 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE wallets\n               SET balance   = $1,\n                   version   = $2,\n                   updated_at = NOW()\n             WHERE id      = $3\n               AND version = $4\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Numeric",
+        "Int8",
+        "Uuid",
+        "Int8"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "4d033f418b2ef6e2f1fdfc0ca8aa748bb437386fdf2790c7e68364ab8c9fa22f"
+}

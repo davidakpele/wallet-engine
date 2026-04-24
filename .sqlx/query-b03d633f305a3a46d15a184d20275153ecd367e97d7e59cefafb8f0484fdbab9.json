@@ -1,0 +1,28 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE transactions\n               SET status         = $1::transaction_status,\n                   failure_reason = $2,\n                   updated_at     = NOW()\n             WHERE id = $3\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        {
+          "Custom": {
+            "name": "transaction_status",
+            "kind": {
+              "Enum": [
+                "PENDING",
+                "COMPLETED",
+                "FAILED",
+                "ROLLED_BACK"
+              ]
+            }
+          }
+        },
+        "Text",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b03d633f305a3a46d15a184d20275153ecd367e97d7e59cefafb8f0484fdbab9"
+}
