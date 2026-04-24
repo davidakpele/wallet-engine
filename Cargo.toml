@@ -1,7 +1,7 @@
 [package]
 name = "wallet-engine"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 authors = ["Fintech Engine Team"]
 description = "High-performance financial transaction engine"
 
@@ -47,8 +47,8 @@ thiserror = "2.0.17"
 anyhow = "1.0"
 
 # Messaging - RabbitMQ
-lapin = "4.4.0"
-deadpool-lapin = "0.13.0"
+lapin = "2.3.3"
+deadpool-lapin = "0.12.1"
 
 # Observability
 tracing = "0.1"

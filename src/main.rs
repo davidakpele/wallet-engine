@@ -25,14 +25,14 @@ use interfaces::grpc::{
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    // ── Config & Observability ────────────────────────────────────────────────
+    // ── Config & Observability
     let cfg = AppConfig::from_env().expect("Failed to load configuration");
     observability::init_tracing();
     observability::init_metrics(&cfg.metrics.host, cfg.metrics.port);
 
     info!("Starting wallet-engine v{}", env!("CARGO_PKG_VERSION"));
 
-    // ── Database ──────────────────────────────────────────────────────────────
+    // ── Database
     let pool = Arc::new(
         PgPoolOptions::new()
             .max_connections(cfg.database.max_connections)
